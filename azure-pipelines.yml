@@ -16,15 +16,12 @@ stages:
       inputs:
         targetType: inline
         script: |
-          # Install Java 17
           sudo apt-get update
           sudo apt-get install -y openjdk-17-jdk
-
-          # Set Java 17 as the default Java version
-          sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-17-openjdk-amd64/bin/java 1
           sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
-
-          # Check the Java version
+          sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
+          
+          #sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-17-openjdk-amd64/bin/java 1
           java --version
 
     - task: Maven@4

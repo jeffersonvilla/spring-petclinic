@@ -18,16 +18,33 @@ stages:
         script: |
           sudo apt-get update
           sudo apt-get install -y openjdk-17-jdk
+          
+          # Update alternatives
+          sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-17-openjdk-amd64/bin/java 1
+          sudo update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac 1
           sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
           sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
           
+          # Verify installation
           java --version
+          
+          # Set JAVA_HOME
+          echo "##vso[task.setvariable variable=JAVA_HOME]/usr/lib/jvm/java-17-openjdk-amd64"
 
+    - task: Bash@3
+      displayName: 'Verify JAVA_HOME'
+      inputs:
+        targetType: inline
+        script: |
+          echo "JAVA_HOME is set to: $JAVA_HOME"
+          ls -l $JAVA_HOME
+          java --version
     - task: Maven@4
       displayName: 'Maven Package'
       inputs:
         mavenPomFile: 'pom.xml'
         goals: 'clean package'
+        options: '-Djava.home=$(JAVA_HOME)'
     - task: CopyFiles@2
       displayName: 'Copy Files to artifact staging directory'
       inputs:

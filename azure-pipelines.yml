@@ -11,6 +11,11 @@ stages:
   - job: Build
     displayName: Build Maven Project
     steps:
+    - task: Bash@3
+      displayName: 'Check java version'
+      inputs:
+        targetType: inline
+        script: sudo java --version
     - task: Maven@4
       displayName: 'Maven Package'
       inputs:

@@ -91,7 +91,7 @@ stages:
       inputs:
         mavenPomFile: 'pom.xml'
         goals: 'test'
-        options: '-Djava.home=$(JAVA_HOME) -T 1C '  # Utilize one core per agent
+        options: '-Djava.home=$(JAVA_HOME)'  # Utilize one core per agent
   
 - stage: Deploy
   displayName: Deploy stage

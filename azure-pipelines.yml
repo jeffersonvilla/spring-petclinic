@@ -78,9 +78,17 @@ stages:
               inputs:
                 targetType: 'inline'
                 script: |
-                  # Modify deployment script based on the app type
-                  echo "Starting deployment script run"
-                  sudo java -jar '$(Pipeline.Workspace)/drop/target/*.jar'
+                  # Ensure the correct path to the jar file is used
+                  JAR_FILE=$(find $(Pipeline.Workspace)/drop -name "*.jar" | head -n 1)
+                  echo "Resolved JAR_FILE path: $JAR_FILE"
+                  
+                  if [ -f "$JAR_FILE" ]; then
+                    echo "Starting deployment with JAR_FILE: $JAR_FILE"
+                    sudo java -jar "$JAR_FILE"
+                  else
+                    echo "Error: JAR file not found"
+                    exit 1
+                  fi
           routeTraffic:
             steps:
             - script: echo routing traffic
